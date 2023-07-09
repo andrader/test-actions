@@ -1,0 +1,79 @@
+name: Auto Bump Version
+
+on:
+  workflow_call:
+    inputs:
+      file_path:
+        required: true
+      line_pattern:
+        required: false
+        default: "__version__ = '{version}'"
+      version_pattern:
+        required: false
+        default: "(.*)"
+          
+
+jobs:
+  bump_version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Bump tag dry run
+        id: bump
+        run: |
+          echo bump tag dry run command
+          # Store the new version in the `new_version` output
+          echo "::set-output name=new_version::1.2.3"
+
+      - name: Update file
+        id: update
+        run: |
+          file_path=${{ github.event.inputs.file_path }}
+          line_pattern=${{ github.event.inputs.line_pattern}}
+          version_pattern=${{ github.event.inputs.version_pattern}}
+          new_version=${{ steps.bump.outputs.new_version }}
+          
+          echo file_path=$file_path, line_pattern=$line_pattern, version_pattern=$version_pattern, new_version=$new_version
+
+          search_pattern="${line_pattern//\{version\}/$version_pattern}"
+          new_version_line="${line_pattern//\{version\}/$new_version}"
+
+          if ! grep -q -E "$search_pattern" "$file_path"; then
+            echo "$search_pattern" not found in "$file_path"
+            exit 1
+          fi
+
+          # Replace the search pattern with the new version line in the file
+          sed -i -E "s/$search_pattern/$new_version_line/" "$file_path"
+
+          if ! grep -q -E "$new_version_line" "$file_path"; then
+            echo "$new_version_line" not found in "$file_path"
+            exit 1
+          else
+            echo "Success"
+          fi
+          
+      - name: Git add
+        run: |
+          git add ${{ github.event.inputs.file_path }}
+
+      - name: Build code
+        run: |
+          echo build code command
+
+      - name: Run tests
+        run: |
+          echo test command
+
+      - name: Commit changes
+        run: |
+          git config user.email "Auto Bump Version"
+          git config user.name "Auto Bump Version"
+          git commit -m "${{ steps.bump.outputs.new_version }}"
+
+      - name: Create tag and release
+        run: |
+          echo create tag and release command
