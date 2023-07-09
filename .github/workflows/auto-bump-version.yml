@@ -72,11 +72,12 @@ jobs:
         run: |
           echo test command
 
-      - name: Commit changes
+      - name: Commit and push changes
         run: |
           git config user.email "Auto Bump Version"
           git config user.name "Auto Bump Version"
           git commit -m "${{ steps.bump.outputs.new_version }}"
+          git push origin
 
       - name: Create tag and release
         run: |
