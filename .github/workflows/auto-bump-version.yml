@@ -26,15 +26,32 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+      
+
+      - name: Configure git credentials
+        uses: oleksiyrudenko/gha-git-credentials@v2-latest
+        with:
+          token: '${{ secrets.GITHUB_TOKEN }}'
+
+
+      - name: Get last Commit SHA
+        id: commit_sha
+        run: |
+          # save last commit SHA value before commiting
+          commit_sha=$(git rev-parse HEAD)
+          echo "commit_sha=$commit_sha" >> "$GITHUB_OUTPUT"
+
 
       - name: Bump version and push tag
         id: dryrun_bump
         uses: mathieudutour/github-tag-action@v6.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          commit_sha: ${{ steps.commit_sha.outputs.commit_sha }}
           dry_run: true
 
-      - name: Update file
+          
+      - name: Update version in file
         id: update
         run: |
           file_path="${{ inputs.file_path }}"
@@ -70,44 +87,32 @@ jobs:
             echo "Success"
           fi
           
-      - name: Git add
-        run: |
-          git add "${{ inputs.file_path }}"
 
       - name: Build code
         run: |
           echo build code command
 
+
       - name: Run tests
         run: |
           echo test command
         
-      - name: Configure git credentials
-        uses: oleksiyrudenko/gha-git-credentials@v2-latest
-        with:
-          token: '${{ secrets.GITHUB_TOKEN }}'
         
-            
       - name: Commit and push changes
         id: commit
         run: |
-          # save last commit SHA value before commiting
-          commit_sha=$(git rev-parse HEAD)
-          echo "commit_sha=$commit_sha" >> "$GITHUB_OUTPUT"
-
+          git add "${{ inputs.file_path }}"
           git diff-index --quiet HEAD || git commit -m "${{ steps.dryrun_bump.outputs.new_version }}"
           git push origin
 
-          
-          
-        
-
-      - name: Bump version and push tag
+      
+      - name: Bump version and create tag
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          commit_sha: ${{ steps.commit.outputs.commit_sha }}
+          commit_sha: ${{ steps.commit_sha.outputs.commit_sha }}
+      
       
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
