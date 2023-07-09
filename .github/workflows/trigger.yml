@@ -7,15 +7,9 @@ on:
 
 jobs:
   auto_bump:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Call Auto Bump
-        uses: ./.github/workflows/auto-bump-version.yml
-        with:
-          file_path: "src/__init__.py"
-          line_pattern: "__version__ = '{version}'"
-          version_pattern: "(.*)"
+    uses: ./.github/workflows/auto-bump-version.yml
+    with:
+      file_path: "src/__init__.py"
+      line_pattern: "__version__ = '{version}'"
+      version_pattern: "(.*)"
+    secrets: inherit
