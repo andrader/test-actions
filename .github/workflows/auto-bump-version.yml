@@ -5,12 +5,15 @@ on:
     inputs:
       file_path:
         required: true
+        type: string
       line_pattern:
         required: false
         default: "__version__ = '{version}'"
+        type: string
       version_pattern:
         required: false
         default: "(.*)"
+        type: string
           
 
 jobs:
