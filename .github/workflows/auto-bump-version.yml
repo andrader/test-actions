@@ -27,13 +27,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Bump tag dry run
+      - name: Bump version and push tag
         id: bump
-        run: |
-          echo bump tag dry run command
-          # Store the new version in the `new_version` output
-          # echo "::set-output name=new_version::1.2.3"
-          echo "new_version=1.2.4" >> $GITHUB_OUTPUT
+        uses: mathieudutour/github-tag-action@v6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          dry_run: true
 
       - name: Update file
         id: update
@@ -42,6 +41,14 @@ jobs:
           line_pattern="${{ inputs.line_pattern}}"
           version_pattern="${{ inputs.version_pattern}}"
           new_version="${{ steps.bump.outputs.new_version }}"
+
+          if [ -z ${new_version+x} ]; then 
+            echo "new_version is unset. Skipping";
+            exit 0 
+          else 
+            echo "new_version is set to '$new_version'"; 
+          fi
+
           
           echo file_path=$file_path, line_pattern=$line_pattern, version_pattern=$version_pattern, new_version=$new_version
 
