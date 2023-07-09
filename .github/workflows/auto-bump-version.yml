@@ -62,7 +62,7 @@ jobs:
           
       - name: Git add
         run: |
-          git add ${{ github.event.inputs.file_path }}
+          git add "${{ inputs.file_path }}"
 
       - name: Build code
         run: |
