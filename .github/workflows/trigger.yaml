@@ -10,7 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
       - name: Call Auto Bump
         uses: ./.github/workflows/auto-bump-version.yaml
