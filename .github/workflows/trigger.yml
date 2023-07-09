@@ -13,3 +13,5 @@ jobs:
       line_pattern: "__version__ = '{version}'"
       version_pattern: "(.*)"
     secrets: inherit
+    permissions:
+      pull-requests: write

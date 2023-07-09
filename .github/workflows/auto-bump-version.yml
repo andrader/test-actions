@@ -19,7 +19,7 @@ on:
 jobs:
   bump_version:
     runs-on: ubuntu-latest
-    
+
     permissions:
       pull-requests: write
 
@@ -73,7 +73,7 @@ jobs:
 
       - name: Run tests
         run: |
-          echo test command '${{ secrets.GITHUB_TOKEN }}'
+          echo test command
         
       - name: Configure git credentials
         uses: oleksiyrudenko/gha-git-credentials@v2-latest
