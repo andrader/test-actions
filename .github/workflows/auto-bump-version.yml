@@ -33,7 +33,7 @@ jobs:
           echo bump tag dry run command
           # Store the new version in the `new_version` output
           # echo "::set-output name=new_version::1.2.3"
-          echo "new_version=1.2.3" >> $GITHUB_OUTPUT
+          echo "new_version=1.2.4" >> $GITHUB_OUTPUT
 
       - name: Update file
         id: update
