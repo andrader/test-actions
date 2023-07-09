@@ -95,7 +95,7 @@ jobs:
           commit_sha=$(git rev-parse HEAD)
           echo "commit_sha=$commit_sha" >> "$GITHUB_OUTPUT"
 
-          git commit -m "${{ steps.dryrun_bump.outputs.new_version }}"
+          git diff-index --quiet HEAD || git commit -m "${{ steps.dryrun_bump.outputs.new_version }}"
           git push origin
 
           
