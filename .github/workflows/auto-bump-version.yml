@@ -70,9 +70,10 @@ jobs:
 
       - name: Run tests
         run: |
-          echo test command
+          echo test command '${{ secrets.GITHUB_TOKEN }}'
         
-      - uses: oleksiyrudenko/gha-git-credentials@v2-latest
+      - name: Configure git credentials
+        uses: oleksiyrudenko/gha-git-credentials@v2-latest
         with:
           token: '${{ secrets.GITHUB_TOKEN }}'
 
