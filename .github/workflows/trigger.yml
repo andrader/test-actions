@@ -14,7 +14,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Call Auto Bump
-        uses: ./.github/workflows/auto-bump-version.yaml
+        uses: ./.github/workflows/auto-bump-version.yml
         with:
           file_path: "src/__init__.py"
           line_pattern: "__version__ = '{version}'"
