@@ -35,9 +35,9 @@ jobs:
       - name: Update file
         id: update
         run: |
-          file_path=${{ github.event.inputs.file_path }}
-          line_pattern=${{ github.event.inputs.line_pattern}}
-          version_pattern=${{ github.event.inputs.version_pattern}}
+          file_path=${{ inputs.file_path }}
+          line_pattern=${{ inputs.line_pattern}}
+          version_pattern=${{ inputs.version_pattern}}
           new_version=${{ steps.bump.outputs.new_version }}
           
           echo file_path=$file_path, line_pattern=$line_pattern, version_pattern=$version_pattern, new_version=$new_version
